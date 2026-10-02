@@ -282,6 +282,10 @@ class Interaction:
             push_last_agent_memory = True
         tmp = self.last_answer
         self.current_agent = agent
+        # Reset the stop flag before each new request. request_stop() sets it but
+        # nothing ever clears it, so a previous /stop would abort (and crash,
+        # for PlannerAgent) every later request handled by the same agent instance.
+        agent.stop = False
         self.is_generating = True
         self.last_answer, self.last_reasoning = await agent.process(self.last_query, self.speech)
         self.is_generating = False

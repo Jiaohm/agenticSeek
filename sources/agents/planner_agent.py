@@ -271,6 +271,10 @@ class PlannerAgent(Agent):
         agents_tasks = []
         required_infos = None
         agents_work_result = dict()
+        # Guard: the loop below may be skipped entirely (e.g. a stop was already
+        # requested), in which case `return answer` at the end of this method
+        # would raise UnboundLocalError (see issue #359).
+        answer = ""
 
         self.status_message = "Making a plan..."
         agents_tasks = await self.make_plan(goal)
